@@ -7,12 +7,11 @@ from subprocess import Popen, PIPE
 class Conversation:
 
 	def say(self, tosay):
-		os.system("espeak " + "\"" + tosay + "\"")
+		#os.system("espeak " + "\"" + tosay + "\"")
 		command =[ 
 				'espeak', 
-				'\"',
-				tosay, 
-				'\"' 
+				"-f",
+				"output.txt" 
 		]
 
 		Popen(command, stdin = PIPE, stdout = PIPE, stderr = PIPE, shell = False)
