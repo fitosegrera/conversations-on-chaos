@@ -8,7 +8,7 @@ import time
 import string
 import random
 
-#ser = serial.Serial('/dev/ttyAMA0', 9600)
+ser = serial.Serial('/dev/ttyAMA0', 9600)
 id1 = '1'
 id2 = '2'
 comInit = '%'
@@ -93,7 +93,7 @@ def run():
     points = ""
     for c in range(int(columns)):
         points += "."
-    for i in range(80):
+    for i in range(10):
         print points
         audio.generate(5, 2)
         time.sleep(0.01)
@@ -104,7 +104,6 @@ def run():
     time.sleep(4)
 
 def initCycle(id, t):
-    global ser
     ser.write(comInit + id + ';')
     time.sleep(t)
 
