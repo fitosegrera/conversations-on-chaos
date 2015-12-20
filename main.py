@@ -152,7 +152,9 @@ while True:
         main()
         time.sleep(10)
         run()
+        time.sleep(15)
         run()
+        time.sleep(15)
 
     except KeyboardInterrupt:
 
