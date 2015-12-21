@@ -81,9 +81,9 @@ def run(seed, agentName, useSound):
             tosay = tmp_sentence
         poschecker += 1
 
-    if useSound:
-        print ''
-        print tosay
+    # if useSound:
+    #     print ''
+    #     print tosay
 
     with open('texts/output.txt', 'a') as text_file:
         short = string.split(tosay)
@@ -153,7 +153,7 @@ def processData(dataToProcess):
             tmp = i
             winIndex = dataSum.index(i)
 
-    print dataSum
+    print str(winIndex)
     return str(winIndex)
 
 def printMsg(msg):
@@ -185,13 +185,11 @@ def main():
     print '\n'
     printMsg('RECEIVING DATA FROM AGENTS...')
     inDataA = endCycle('1', 10)
-    processData(inDataA)
+    totalData[0] = processData(inDataA)
     inDataB = endCycle('2', 10)
-    processData(inDataB)
+    totalData[1] = processData(inDataB)
     time.sleep(3)
-    totalData[0] = str(inDataA)
-    totalData[1] = str(inDataB)
-    print totalData
+    print "random data:", totalData
     return totalData
 
 
