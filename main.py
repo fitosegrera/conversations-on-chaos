@@ -197,6 +197,9 @@ while True:
     try:
         randomSeed = main()
         time.sleep(10)
+        for i in randomSeed:
+            if i == '':
+                randomSeed[randomSeed.index(i)] = str(random.randint(0,5))
         run(randomSeed[0], "A", True)
         time.sleep(8)
         run(randomSeed[1], "B", False)
