@@ -13,6 +13,8 @@ id1 = '1'
 id2 = '2'
 comInit = '%'
 comEnd = '$'
+inDataA = ""
+inDataB = ""
 cycleLimit = 30
 (rows, columns) = os.popen('stty size', 'r').read().split()
 
@@ -20,8 +22,8 @@ audio = noise.Noise()
 voice = conversation.Conversation()
 
 
-def run():
-    file = open("input.txt", 'r')
+def run(agentName, useSound):
+    file = open("texts/input.txt", 'r')
     text = file.read()
     file.close()
     words = string.split(text)
@@ -49,7 +51,8 @@ def run():
     key = ()
     count = len(words) / 10
 
-    audio.alert(12, 0.2, 900)
+    if useSound:
+        audio.alert(12, 0.2, 900)
     random_index = random.randint(0, len(words))
     tmp_sentence = ''
     tosay = ''
@@ -59,13 +62,15 @@ def run():
         if dict.has_key(key):
             word = random.choice(dict[key])  # this is where the randomness takes place
             tmp_sentence += str(word + ' ')
-            print word,
+            if useSound:
+                print word,
             key = (key[1], word)
             if key in end_sentence:
                 rand = random.random() * (0.01 - 0.001) + 0.001
-                audio.whitenoise(rand, random.randint(10, 50))
-                time.sleep(0.05)
-                print
+                if useSound:
+                        audio.whitenoise(rand, random.randint(10, 50))
+                        time.sleep(0.05)
+                        print
                 count = count - 1
                 if count <= 0:
                     break
@@ -75,9 +80,11 @@ def run():
             tosay = tmp_sentence
         poschecker += 1
 
-    print ''
-    print tosay
-    with open('output.txt', 'w') as text_file:
+    if useSound:
+        print ''
+        print tosay
+
+    with open('texts/output.txt', 'a') as text_file:
         short = string.split(tosay)
         towrite = ''
         rang = None
@@ -89,18 +96,23 @@ def run():
             towrite += short[w] + ' '
             if (short[w])[-1:] == '.':
                 break
-        text_file.write(towrite)
+        text_file.write(agentName + ": " + towrite + "\n\n")
     points = ""
     for c in range(int(columns)):
         points += "."
-    for i in range(10):
-        print points
-        audio.generate(5, 2)
-        time.sleep(0.01)
+
+    if useSound:
+        for i in range(10):
+            print points
+            audio.generate(5, 2)
+            time.sleep(0.01)
+
     printMsg('SPEAKING...')
     time.sleep(4)
-    voice.say(tmp_sentence)
-    printMsg(towrite)
+    # voice.say(tmp_sentence)
+    voice.writeWav(towrite, agentName)
+    printMsg(agentName + ": " + towrite)
+    voice.playWav(agentName)
     time.sleep(4)
 
 def initCycle(id, t):
@@ -112,9 +124,15 @@ def endCycle(id, t):
     global ser
     ser.write(comEnd + id + ';')
     time.sleep(t)
+    in = ser.readline()
     print 'ID:', id
-    print ser.readline()
+    print in
+    return in
 
+def processData(dataToProcess):
+    splitted = data.split()
+    for d in splitted:
+        print d
 
 def printMsg(msg):
     line = ''
@@ -135,15 +153,19 @@ def printMsg(msg):
 
 
 def main():
-    global cycleLimit
+    global cycleLimit, inDataA, inDAtaB
+    inDataA = ""
+    inDataB = ""
     printMsg('CHAOTIC CYCLE INITIATED...')
     initCycle('1', 3)
     initCycle('2', 3)
     time.sleep(cycleLimit)
     print '\n'
     printMsg('RECEIVING DATA FROM AGENTS...')
-    endCycle('1', 10)
-    endCycle('2', 10)
+    inDataA = endCycle('1', 10)
+    processData(inDataA)
+    inDataB = endCycle('2', 10)
+    processData(inDAtaB)
     time.sleep(3)
 
 
@@ -151,10 +173,10 @@ while True:
     try:
         main()
         time.sleep(10)
-        run()
-        time.sleep(15)
-        run()
-        time.sleep(15)
+        run("A", True)
+        time.sleep(8)
+        run("B", False)
+        time.sleep(8)
 
     except KeyboardInterrupt:
 
