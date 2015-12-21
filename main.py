@@ -21,9 +21,8 @@ cycleLimit = 30
 audio = noise.Noise()
 voice = conversation.Conversation()
 
-
-def run(agentName, useSound):
-    file = open("texts/input.txt", 'r')
+def run(seed, agentName, useSound):
+    file = open("texts/in" + seed + ".txt", 'r')
     text = file.read()
     file.close()
     words = string.split(text)
@@ -49,7 +48,7 @@ def run(agentName, useSound):
         return
 
     key = ()
-    count = len(words) / 10
+    count = len(words)/15
 
     if useSound:
         audio.alert(12, 0.2, 900)
@@ -63,14 +62,16 @@ def run(agentName, useSound):
             word = random.choice(dict[key])  # this is where the randomness takes place
             tmp_sentence += str(word + ' ')
             if useSound:
-                print word,
+                #print word,
+                pass
             key = (key[1], word)
-            if key in end_sentence:
+            if useSound:
+                print key
                 rand = random.random() * (0.01 - 0.001) + 0.001
-                if useSound:
-                        audio.whitenoise(rand, random.randint(10, 50))
-                        time.sleep(0.05)
-                        print
+                audio.whitenoise(rand, random.randint(10, 50))
+                time.sleep(0.05)
+            if key in end_sentence:
+                print
                 count = count - 1
                 if count <= 0:
                     break
@@ -109,7 +110,6 @@ def run(agentName, useSound):
 
     printMsg('SPEAKING...')
     time.sleep(4)
-    # voice.say(tmp_sentence)
     voice.writeWav(towrite, agentName)
     printMsg(agentName + ": " + towrite)
     voice.playWav(agentName)
@@ -146,8 +146,15 @@ def processData(dataToProcess):
         if d == "7":
             dataSum[5] += 1
     
+    tmp = 0
+    winIndex = ""
+    for i in dataSum:
+        if i > tmp:
+            tmp = i
+            winIndex = index(i)
+
     print dataSum
-    return dataSum
+    return str(winIndex)
 
 def printMsg(msg):
     line = ''
@@ -166,11 +173,11 @@ def printMsg(msg):
         line += ' '
     print line
 
-
 def main():
     global cycleLimit, inDataA, inDataB
     inDataA = ""
     inDataB = ""
+    totalData = [None]*2
     printMsg('CHAOTIC CYCLE INITIATED...')
     initCycle('1', 3)
     initCycle('2', 3)
@@ -182,20 +189,20 @@ def main():
     inDataB = endCycle('2', 10)
     processData(inDataB)
     time.sleep(3)
+    totalData[0] = str(inDataA)
+    totalData[1] = str(inDataB)
+    print totalData
+    return totalData
 
 
 while True:
     try:
-        main()
+        randomSeed = main()
         time.sleep(10)
-        run("A", True)
+        run(randomSeed[0], "A", True)
         time.sleep(8)
-        run("B", False)
+        run(randomSeed[1], "B", False)
         time.sleep(8)
 
     except KeyboardInterrupt:
-
         exit(0)
-
-
-
