@@ -124,10 +124,10 @@ def endCycle(id, t):
     global ser
     ser.write(comEnd + id + ';')
     time.sleep(t)
-    in = ser.readline()
+    inDat = ser.readline()
     print 'ID:', id
-    print in
-    return in
+    print inDat
+    return inDat
 
 def processData(dataToProcess):
     splitted = data.split()
