@@ -151,7 +151,7 @@ def processData(dataToProcess):
     for i in dataSum:
         if i > tmp:
             tmp = i
-            winIndex = index(i)
+            winIndex = dataSum.index(i)
 
     print dataSum
     return str(winIndex)
