@@ -131,8 +131,23 @@ def endCycle(id, t):
 
 def processData(dataToProcess):
     splitted = dataToProcess.split()
+    dataSum = [0,0,0,0,0,0]
     for d in splitted:
-        print d
+        if d == "2":
+            dataSum[0] += 1
+        if d == "3":
+            dataSum[1] += 1
+        if d == "4":
+            dataSum[2] += 1
+        if d == "5":
+            dataSum[3] += 1
+        if d == "6":
+            dataSum[4] += 1
+        if d == "7":
+            dataSum[5] += 1
+    
+    print dataSum
+    return dataSum
 
 def printMsg(msg):
     line = ''
@@ -153,7 +168,7 @@ def printMsg(msg):
 
 
 def main():
-    global cycleLimit, inDataA, inDAtaB
+    global cycleLimit, inDataA, inDataB
     inDataA = ""
     inDataB = ""
     printMsg('CHAOTIC CYCLE INITIATED...')
@@ -165,7 +180,7 @@ def main():
     inDataA = endCycle('1', 10)
     processData(inDataA)
     inDataB = endCycle('2', 10)
-    processData(inDAtaB)
+    processData(inDataB)
     time.sleep(3)
 
 
