@@ -130,7 +130,7 @@ def endCycle(id, t):
     return inDat
 
 def processData(dataToProcess):
-    splitted = data.split()
+    splitted = dataToProcess.split()
     for d in splitted:
         print d
 
